@@ -34,6 +34,6 @@ class LembreteModel(database.Model):
         database.session.add(self)
         database.session.commit()
 
-    def delete_hotel(self):
-        database.session.delete(self)
-        database.session.commit()
+    # def delete_lembrete(self):
+    #     database.session.delete(self)
+    #     database.session.commit()
