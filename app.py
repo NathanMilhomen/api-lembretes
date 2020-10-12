@@ -9,6 +9,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
 
 
+@app.before_first_request
+def cria_banco():
+    database.create_all()
+
+
 api.add_resource(Lembretes, '/lembretes')
 api.add_resource(Lembrete, '/lembrete/<string:id>')
 
