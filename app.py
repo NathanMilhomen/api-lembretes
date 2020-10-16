@@ -15,6 +15,9 @@ api = Api(app)
 @app.before_first_request
 def cria_banco():
     database.create_all()
+    connection = psycopg2.connect(
+        host=config("HOST"), user=config("USER"), password=config("PASSWORD"), database=config("DBNAME"))
+    cursor = connection.cursor()
 
 
 api.add_resource(Lembretes, "/lembretes")

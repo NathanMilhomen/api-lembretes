@@ -1,9 +1,9 @@
 from flask_restful import Resource, reqparse
 from sqlalchemy.orm import query
 from models.lembreteModel import LembreteModel
-from decouple import config
-import psycopg2
-from datetime import timezone, timedelta, datetime
+# from decouple import config
+# from datetime import timezone, timedelta, datetime
+from app import cursor
 
 
 class Lembretes(Resource):
@@ -42,9 +42,6 @@ class Lembretes(Resource):
             return None
 
     def get(self):
-        connection = psycopg2.connect(
-            host=config("HOST"), user=config("USER"), password=config("PASSWORD"), database=config("DBNAME"))
-        cursor = connection.cursor()
 
         data = self.path_param.parse_args()
         valid_data = {key: data[key] for key in data if data[key] is not None}
@@ -127,3 +124,4 @@ class Lembrete(Resource):
 
 
 # TODO: Terminar put
+# Tentar limitar IP de acesso a api
