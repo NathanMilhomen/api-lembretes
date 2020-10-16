@@ -30,8 +30,8 @@ class LembreteModel(database.Model):
             "nota": self.nota,
             "dia": self.dia,
             "hora": self.hora,
-            "autorID": self.autor_id,
-            "autorNome": self.autor_nome,
+            "autor_id": self.autor_id,
+            "autor_nome": self.autor_nome,
             "canal": self.canal
         }
 

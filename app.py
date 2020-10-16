@@ -1,6 +1,6 @@
 from flask import Flask
-from flask_restful import Resource, Api
-from resources.lembretes import Lembretes, Lembrete
+from flask_restful import Api
+from resources.lembretes import CadastarLembrete, Lembretes, Lembrete
 from decouple import config
 
 app = Flask(__name__)
@@ -14,8 +14,9 @@ def cria_banco():
     database.create_all()
 
 
-api.add_resource(Lembretes, '/lembretes')
-api.add_resource(Lembrete, '/lembrete/<string:id>')
+api.add_resource(Lembretes, "/lembretes")
+api.add_resource(CadastarLembrete, "/cadastrar/lembrete")
+api.add_resource(Lembrete, "/lembrete/<string:id>")
 
 
 if __name__ == '__main__':
