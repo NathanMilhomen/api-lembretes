@@ -6,9 +6,9 @@ from models.sqlalchemy import database
 
 
 app = Flask(__name__)
-database.init_app(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+database.init_app(app)
 api = Api(app)
 
 
