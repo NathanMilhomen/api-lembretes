@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from sqlalchemy.orm import query
 from models.lembreteModel import LembreteModel
-# from decouple import config
+from decouple import config
 # from datetime import timezone, timedelta, datetime
 import psycopg2
 
