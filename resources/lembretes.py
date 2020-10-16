@@ -3,7 +3,6 @@ from sqlalchemy.orm import query
 from models.lembreteModel import LembreteModel
 # from decouple import config
 # from datetime import timezone, timedelta, datetime
-from app import cursor
 
 
 class Lembretes(Resource):
@@ -42,7 +41,6 @@ class Lembretes(Resource):
             return None
 
     def get(self):
-
         data = self.path_param.parse_args()
         valid_data = {key: data[key] for key in data if data[key] is not None}
         params = Lembretes.normalize_params(**valid_data)
@@ -64,6 +62,7 @@ class Lembretes(Resource):
         else:
             query = "SELECT * FROM lembretes_app_lembrete WHERE dia = %s"
         values = tuple([params[0][key] for key in params[0]])
+        from app import cursor
         cursor.execute(query, values)
         result = cursor.fetchall()
         lembretes = []

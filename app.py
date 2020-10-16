@@ -3,7 +3,7 @@ from flask_restful import Api
 from resources.lembretes import CadastarLembrete, Lembretes, Lembrete
 from decouple import config
 from models.sqlalchemy import database
-
+import psycopg2
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URI')
