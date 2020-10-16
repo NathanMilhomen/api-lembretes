@@ -131,4 +131,3 @@ class Lembrete(Resource):
 
 
 # TODO: Terminar put
-# Fazer autenticação

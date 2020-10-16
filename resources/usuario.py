@@ -31,7 +31,7 @@ class Usuario(Resource):
         current_user_id = get_jwt_identity()
         if current_user_id == usuario.user_id:
             usuario.delete_user()
-            return {'message': 'Usuário deletado'}, 204
+            return {'message': 'Usuário deletado'}, 200
 
         return {'message': 'Usuário não encontrado ou você está tentando deletar outro usuário'}, 404
 

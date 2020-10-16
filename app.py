@@ -1,11 +1,11 @@
+from blacklist import BLACKLIST
+from models.sqlalchemy import database
+from decouple import config
+from resources.usuario import UsuarioCadastro, Usuario, UsuarioLogin, UsuarioLogout
+from resources.lembretes import CadastarLembrete, Lembretes, Lembrete
 from flask import Flask, jsonify
 from flask_restful import Api
-from flask_jwt_extended import JWTManager
-from resources.lembretes import CadastarLembrete, Lembretes, Lembrete
-from resources.usuario import UsuarioCadastro, Usuario, UsuarioLogin, UsuarioLogout
-from decouple import config
-from models.sqlalchemy import database
-from blacklist import BLACKLIST
+from flask_jwt_extended import JWTManager, exceptions
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URI')
@@ -32,6 +32,11 @@ api = Api(app)
 @app.before_first_request
 def cria_banco():
     database.create_all()
+
+
+@app.errorhandler(exceptions.NoAuthorizationError)
+def handle_exception_header(error):
+    return {"message": "Você precisa estar logado para fazer esta ação"}, 401
 
 
 api.add_resource(Lembretes, "/lembretes")
