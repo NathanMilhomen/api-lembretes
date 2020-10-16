@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from sqlalchemy.orm import query
+from flask_jwt_extended import jwt_required
 from models.lembreteModel import LembreteModel
 from decouple import config
 # from datetime import timezone, timedelta, datetime
@@ -41,6 +41,7 @@ class Lembretes(Resource):
         else:
             return None
 
+    @jwt_required
     def get(self):
         data = self.path_param.parse_args()
         valid_data = {key: data[key] for key in data if data[key] is not None}
@@ -63,10 +64,11 @@ class Lembretes(Resource):
         else:
             query = "SELECT * FROM lembretes_app_lembrete WHERE dia = %s"
         values = tuple([params[0][key] for key in params[0]])
-        # from app import cursor
+
         connection = psycopg2.connect(
             host=config("HOST"), user=config("USER"), password=config("PASSWORD"), database=config("DBNAME"))
         cursor = connection.cursor()
+
         cursor.execute(query, values)
         result = cursor.fetchall()
         lembretes = []
@@ -102,6 +104,7 @@ class CadastarLembrete(Resource):
     arguments.add_argument('canal', type=str,
                            required=True, help="Campo canal obrigatório")
 
+    @jwt_required
     def post(self):
         dados = CadastarLembrete.arguments.parse_args()
 
@@ -118,6 +121,7 @@ class Lembrete(Resource):
     def put(self, id):
         pass
 
+    @jwt_required
     def delete(self, id):
         lembrete = LembreteModel.query.get(id)
         if lembrete:
@@ -127,4 +131,4 @@ class Lembrete(Resource):
 
 
 # TODO: Terminar put
-# Tentar limitar IP de acesso a api
+# Fazer autenticação
