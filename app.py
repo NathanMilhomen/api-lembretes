@@ -2,6 +2,8 @@ from flask import Flask
 from flask_restful import Api
 from resources.lembretes import CadastarLembrete, Lembretes, Lembrete
 from decouple import config
+from models.sqlalchemy import database
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URI')
@@ -20,6 +22,5 @@ api.add_resource(Lembrete, "/lembrete/<string:id>")
 
 
 if __name__ == '__main__':
-    from models.sqlalchemy import database
     database.init_app(app)
     app.run(debug=True)
