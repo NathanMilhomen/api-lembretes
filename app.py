@@ -6,6 +6,7 @@ from models.sqlalchemy import database
 
 
 app = Flask(__name__)
+database.init_app(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
@@ -22,5 +23,5 @@ api.add_resource(Lembrete, "/lembrete/<string:id>")
 
 
 if __name__ == '__main__':
-    database.init_app(app)
+
     app.run(debug=True)
