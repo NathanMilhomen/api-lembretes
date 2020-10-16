@@ -3,6 +3,7 @@ from sqlalchemy.orm import query
 from models.lembreteModel import LembreteModel
 # from decouple import config
 # from datetime import timezone, timedelta, datetime
+import psycopg2
 
 
 class Lembretes(Resource):
@@ -62,7 +63,10 @@ class Lembretes(Resource):
         else:
             query = "SELECT * FROM lembretes_app_lembrete WHERE dia = %s"
         values = tuple([params[0][key] for key in params[0]])
-        from app import cursor
+        # from app import cursor
+        connection = psycopg2.connect(
+            host=config("HOST"), user=config("USER"), password=config("PASSWORD"), database=config("DBNAME"))
+        cursor = connection.cursor()
         cursor.execute(query, values)
         result = cursor.fetchall()
         lembretes = []
