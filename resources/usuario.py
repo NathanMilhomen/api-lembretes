@@ -53,10 +53,6 @@ class UsuarioCadastro(Resource):
         usuario.save_user()
         return {'message': 'Usuário criado com sucesso'}, 201
 
-    @jwt_required
-    def get(self):
-        return {"message": f"Usuario: {get_jwt_identity()}"}
-
 
 class UsuarioLogin(Resource):
 
