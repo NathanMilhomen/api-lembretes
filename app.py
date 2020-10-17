@@ -10,8 +10,9 @@ from flask_jwt_extended import JWTManager, exceptions
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'DontTellAnybody'
+app.config['JWT_SECRET_KEY'] = config("SECRET_KEY")
 app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['BUNDLE_ERRORS'] = True
 app.config['PROPAGATE_EXCEPTIONS'] = True
 jwt = JWTManager(app)
 
@@ -23,7 +24,13 @@ def check_if_token_in_blacklist(token):
 
 @jwt.revoked_token_loader
 def invalid_acess_token():
-    return jsonify({'message': 'You are not logged'}), 401
+    return {"message": "Você não está logado"}, 401
+
+
+@jwt.invalid_token_loader
+def invalid_acess_token(reason):
+    return {"message": f"Token invalido",
+            "error": reason}
 
 
 database.init_app(app)
@@ -37,7 +44,7 @@ def cria_banco():
 
 @app.errorhandler(exceptions.NoAuthorizationError)
 def handle_exception_header(error):
-    return {"message": "Você precisa estar logado para fazer esta ação"}, 401
+    return {"message": "Você precisa logar para fazer esta ação"}, 401
 
 
 api.add_resource(Lembretes, "/lembretes")
@@ -49,5 +56,4 @@ api.add_resource(UsuarioLogin, "/login")
 api.add_resource(UsuarioLogout, "/logout")
 
 if __name__ == '__main__':
-
     app.run(debug=True)

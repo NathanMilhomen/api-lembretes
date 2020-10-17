@@ -1,4 +1,5 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, request
+
 from werkzeug.security import safe_str_cmp
 from flask_jwt_extended import (
     jwt_required, create_access_token,
@@ -39,6 +40,9 @@ class Usuario(Resource):
 class UsuarioCadastro(Resource):
 
     def post(self):
+        print(request)
+        if not request.is_json():
+            return {"message": "json com os dados faltando"}, 401
 
         data = arguments.parse_args()
 
@@ -49,6 +53,10 @@ class UsuarioCadastro(Resource):
         usuario.save_user()
         return {'message': 'Usuário criado com sucesso'}, 201
 
+    @jwt_required
+    def get(self):
+        return {"message": f"Usuario: {get_jwt_identity()}"}
+
 
 class UsuarioLogin(Resource):
 
@@ -57,7 +65,7 @@ class UsuarioLogin(Resource):
         user = UsuarioModel.query.filter_by(login=data['login']).first()
         if user:
             if safe_str_cmp(user.senha, data["senha"]) and safe_str_cmp(user.secret, data["secret"]):
-                acess_token = create_access_token(identity=user.user_id)
+                acess_token = create_access_token(identity=user.login)
                 return {"acess_token": acess_token}, 200
 
             return {"message": "Acesso negado"}, 401
