@@ -19,7 +19,6 @@ arguments.add_argument(
 
 
 class Usuario(Resource):
-    # /usuario/{user_id}
     def get(self, user_id):
         usuario = UsuarioModel.query.get(user_id)
         if usuario:

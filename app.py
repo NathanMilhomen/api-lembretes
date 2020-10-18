@@ -14,6 +14,7 @@ app.config['JWT_SECRET_KEY'] = config("SECRET_KEY")
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['BUNDLE_ERRORS'] = True
 app.config['PROPAGATE_EXCEPTIONS'] = True
+app.config['JSON_AS_ASCII'] = False
 jwt = JWTManager(app)
 
 
