@@ -30,8 +30,9 @@ class Usuario(Resource):
     @jwt_required
     def delete(self, user_id):
         usuario = UsuarioModel.query.get(user_id)
-        current_user_id = get_jwt_identity()
-        if current_user_id == usuario.user_id:
+        current_user_login = get_jwt_identity()
+
+        if current_user_login == usuario.login:
             usuario.delete_user()
             return {'message': 'Usuário deletado'}, 200
 
