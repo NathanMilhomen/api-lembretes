@@ -19,6 +19,8 @@ arguments.add_argument(
 
 
 class Usuario(Resource):
+
+    @jwt_required
     def get(self, user_id):
         usuario = UsuarioModel.query.get(user_id)
         if usuario:
@@ -39,7 +41,6 @@ class Usuario(Resource):
 class UsuarioCadastro(Resource):
 
     def post(self):
-        print(request)
         if not request.is_json():
             return {"message": "json com os dados faltando"}, 401
 
