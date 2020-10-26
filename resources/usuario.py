@@ -32,9 +32,10 @@ class Usuario(Resource):
         usuario = UsuarioModel.query.get(user_id)
         current_user_login = get_jwt_identity()
 
-        if current_user_login == usuario.login:
-            usuario.delete_user()
-            return {'message': 'Usuário deletado'}, 200
+        if usuario:
+            if current_user_login == usuario.login:
+                usuario.delete_user()
+                return {'message': 'Usuário deletado'}, 200
 
         return {'message': 'Usuário não encontrado ou você está tentando deletar outro usuário'}, 404
 
