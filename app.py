@@ -3,7 +3,7 @@ from models.sqlalchemy import database
 from decouple import config
 from resources.usuario import UsuarioCadastro, Usuario, UsuarioLogin, UsuarioLogout
 from resources.lembretes import CadastarLembrete, Lembretes, Lembrete
-from flask import Flask, jsonify
+from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager, exceptions
 
