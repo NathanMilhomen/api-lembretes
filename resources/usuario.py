@@ -40,8 +40,6 @@ class Usuario(Resource):
 
         return {'message': 'Usuário não encontrado ou você está tentando deletar outro usuário'}, 404
 
-# TODO: Apagar os usuarios de teste e fazer a verificação de senha para login
-
 
 class UsuarioCadastro(Resource):
 
