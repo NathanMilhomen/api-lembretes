@@ -67,8 +67,6 @@ class UsuarioLogin(Resource):
     def post(self):
         data = arguments.parse_args()
         user = UsuarioModel.query.filter_by(login=data['login']).first()
-        print(user.senha)
-        print(data["senha"])
         if user:
             if bcrypt.checkpw(str.encode(data["senha"]), str.encode(user.senha)) and safe_str_cmp(user.secret, data["secret"]):
                 acess_token = create_access_token(identity=user.login)
