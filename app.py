@@ -52,7 +52,7 @@ api.add_resource(Lembretes, "/lembretes")
 api.add_resource(CadastarLembrete, "/cadastrar/lembrete")
 api.add_resource(Lembrete, "/lembrete/<string:id>")
 api.add_resource(Usuario, "/usuario/<string:user_id>")
-# api.add_resource(UsuarioCadastro, "/cadastro")
+api.add_resource(UsuarioCadastro, "/cadastro")
 api.add_resource(UsuarioLogin, "/login")
 api.add_resource(UsuarioLogout, "/logout")
 

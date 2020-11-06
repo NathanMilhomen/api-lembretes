@@ -7,7 +7,7 @@ class UsuarioModel(database.Model):
     user_id = database.Column(database.Integer, primary_key=True)
     login = database.Column(database.String(40))
     secret = database.Column(database.String(40))
-    senha = database.Column(database.String(40))
+    senha = database.Column(database.String(100))
 
     # Não passar o id
     def __init__(self, login, senha, secret):

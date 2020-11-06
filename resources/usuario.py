@@ -5,6 +5,7 @@ from flask_jwt_extended import (
     jwt_required, create_access_token,
     get_jwt_identity, get_raw_jwt
 )
+import bcrypt
 
 from models.usuarioModel import UsuarioModel
 from blacklist import BLACKLIST
@@ -39,17 +40,22 @@ class Usuario(Resource):
 
         return {'message': 'Usuário não encontrado ou você está tentando deletar outro usuário'}, 404
 
+# TODO: Apagar os usuarios de teste e fazer a verificação de senha para login
+
 
 class UsuarioCadastro(Resource):
 
     def post(self):
-        if not request.is_json():
+        if not request.is_json:
             return {"message": "json com os dados faltando"}, 401
 
         data = arguments.parse_args()
 
         if UsuarioModel.query.filter_by(login=data['login']).first():
             return {'message': 'Esse usuário já existe'}, 400
+
+        data["senha"] = bcrypt.hashpw(str.encode(
+            data["senha"]), bcrypt.gensalt(rounds=10)).decode()
 
         usuario = UsuarioModel(**data)
         usuario.save_user()
@@ -61,8 +67,10 @@ class UsuarioLogin(Resource):
     def post(self):
         data = arguments.parse_args()
         user = UsuarioModel.query.filter_by(login=data['login']).first()
+        print(user.senha)
+        print(data["senha"])
         if user:
-            if safe_str_cmp(user.senha, data["senha"]) and safe_str_cmp(user.secret, data["secret"]):
+            if bcrypt.checkpw(str.encode(data["senha"]), str.encode(user.senha)) and safe_str_cmp(user.secret, data["secret"]):
                 acess_token = create_access_token(identity=user.login)
                 return {"acess_token": acess_token}, 200
 
