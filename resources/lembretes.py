@@ -23,7 +23,7 @@ class Lembretes(Resource):
     ):
         query = """SELECT * FROM lembretes_app_lembrete
         where autor_id= %s"""
-        values = [autor_id]
+        values = [("<@!" + autor_id + ">")]
         if servidor:
             query += " AND servidor = %s"
             values.append(servidor)
