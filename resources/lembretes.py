@@ -36,8 +36,8 @@ class Lembretes(Resource):
         values.extend([limit, offset])
 
         return query, tuple(values)
-    # @jwt_required
 
+    @jwt_required
     def get(self):
         data = self.path_param.parse_args()
         valid_data = {key: data[key] for key in data if data[key] is not None}
@@ -67,7 +67,7 @@ class Lembretes(Resource):
                 "autor_nome": row[6],
                 "canal": row[7]
             })
-        return {"lembretes": lembretes}, 200 if lembretes else 204
+        return {"lembretes": lembretes}, 200
 
 
 class CadastarLembrete(Resource):
