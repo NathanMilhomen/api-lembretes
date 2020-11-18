@@ -45,7 +45,7 @@ class UsuarioCadastro(Resource):
 
     def post(self):
         if not request.is_json:
-            return {"message": "json com os dados faltando"}, 401
+            return {"message": "Os dados precisam ser enviados no formato de json"}, 401
 
         data = arguments.parse_args()
 
@@ -56,7 +56,7 @@ class UsuarioCadastro(Resource):
             data["senha"]), bcrypt.gensalt(rounds=10)).decode()
 
         usuario = UsuarioModel(**data)
-        usuario.save_user()
+        # usuario.save_user()
         return {'message': 'Usuário criado com sucesso'}, 201
 
 

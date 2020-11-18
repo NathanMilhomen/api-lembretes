@@ -9,61 +9,44 @@ import psycopg2
 class Lembretes(Resource):
     path_param = reqparse.RequestParser()
     path_param.add_argument("dia", type=str)
-    path_param.add_argument("autor_nome", type=str)
+    path_param.add_argument("autor_id", type=str)
+    path_param.add_argument("servidor", type=str)
     path_param.add_argument("limit", type=float)
     path_param.add_argument("offset", type=float)
 
     def normalize_params(
         dia=None,
-        autor_nome=None,
+        autor_id=None,
+        servidor=None,
         limit=50,
         offset=0
     ):
-        if dia and not autor_nome:
-            return [{
-                "dia": dia
-            }, 0]
+        query = """SELECT * FROM lembretes_app_lembrete
+        where autor_id= %s"""
+        values = [autor_id]
+        if servidor:
+            query += " AND servidor = %s"
+            values.append(servidor)
 
-        elif autor_nome and not dia:
-            return [{
-                "autor_nome": autor_nome,
-                "limit": limit,
-                "offset": offset
-            }, 1]
-        elif autor_nome and dia:
-            return [{
-                "dia": dia,
-                "autor_nome": autor_nome,
-                "limit": limit,
-                "offset": offset
-            }, 2]
+        if dia:
+            query += " AND dia = %s"
+            values.append(dia)
 
-        else:
-            return None
+        query += " LIMIT %s OFFSET %s;"
+        values.extend([limit, offset])
 
-    @jwt_required
+        return query, tuple(values)
+    # @jwt_required
+
     def get(self):
         data = self.path_param.parse_args()
         valid_data = {key: data[key] for key in data if data[key] is not None}
-        params = Lembretes.normalize_params(**valid_data)
-        if not params:
+
+        if not valid_data:
             lembretes = LembreteModel.query.all()
             return [lembrete.convert_to_json() for lembrete in lembretes], 200
-        elif params[1] == 1:
-            query = """
-            SELECT * FROM lembretes_app_lembrete
-            where autor_nome = %s
-            LIMIT %s OFFSET %s 
-            """
-        elif params[1] == 2:
-            query = """
-            SELECT * FROM lembretes_app_lembrete
-            WHERE dia = %s AND autor_nome = %s
-            LIMIT %s OFFSET %s 
-            """
-        else:
-            query = "SELECT * FROM lembretes_app_lembrete WHERE dia = %s"
-        values = tuple([params[0][key] for key in params[0]])
+
+        query, values = Lembretes.normalize_params(**valid_data)
 
         connection = psycopg2.connect(
             host=config("HOST"), user=config("USER"), password=config("PASSWORD"), database=config("DBNAME"))
