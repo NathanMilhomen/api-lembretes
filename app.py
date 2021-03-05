@@ -3,9 +3,11 @@ from models.sqlalchemy import database
 from decouple import config
 from resources.usuario import UsuarioCadastro, Usuario, UsuarioLogin, UsuarioLogout
 from resources.lembretes import CadastarLembrete, Lembretes, Lembrete
-from flask import Flask
+from flask import Flask, request, render_template
 from flask_restful import Api
 from flask_jwt_extended import JWTManager, exceptions
+import os
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URI')
@@ -55,6 +57,31 @@ api.add_resource(Usuario, "/usuario/<string:user_id>")
 # api.add_resource(UsuarioCadastro, "/cadastro")
 api.add_resource(UsuarioLogin, "/login")
 api.add_resource(UsuarioLogout, "/logout")
+
+
+@app.route("/create_html", methods=["POST"])
+def html():
+    data = request.form
+    html = data['html']
+    author_id = data['author_id']
+    path = f"templates/{author_id}.html"
+
+    if not (html and author_id):
+        return '<html><body><h1>Houve um problema.</h1></body></html>'
+
+    # os.makedirs('src/' + author_id + '/')
+    arquivo = open(path, "w", encoding="utf-8")
+    arquivo.write(html)
+    arquivo.close()
+
+    return {"message": "ok"}
+
+
+@app.route('/html/<id>', methods=['GET'])
+def get_html(id):
+
+    return render_template(f"{id}.html")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
